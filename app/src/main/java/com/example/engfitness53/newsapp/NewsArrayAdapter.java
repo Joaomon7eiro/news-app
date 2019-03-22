@@ -1,6 +1,9 @@
 package com.example.engfitness53.newsapp;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,16 +11,15 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 
 public class NewsArrayAdapter extends ArrayAdapter {
 
-    private int mLayoutResourceId;
-
-    public NewsArrayAdapter(Context context, ArrayList<News> newsArrayList, int layoutResourceId) {
+    public NewsArrayAdapter(Context context, ArrayList<News> newsArrayList) {
         super(context, 0, newsArrayList);
-        //mLayoutResourceId = R.layout.news_list_item;
-        mLayoutResourceId = layoutResourceId;
     }
 
     @Override
@@ -25,7 +27,7 @@ public class NewsArrayAdapter extends ArrayAdapter {
         View listViewItem = convertView;
 
         if (listViewItem == null) {
-            listViewItem = LayoutInflater.from(getContext()).inflate(mLayoutResourceId, parent, false);
+            listViewItem = LayoutInflater.from(getContext()).inflate(R.layout.news_list_item, parent, false);
         }
 
         News news = (News) getItem(position);
@@ -40,7 +42,8 @@ public class NewsArrayAdapter extends ArrayAdapter {
         date.setText(news.getDate());
 
         ImageView newsImage = listViewItem.findViewById(R.id.image);
-        newsImage.setImageResource(news.getImageResourceId());
+
+        newsImage.setImageBitmap(news.getImageLink());
 
         return listViewItem;
     }
