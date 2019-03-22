@@ -2,7 +2,6 @@ package com.example.engfitness53.newsapp;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -47,15 +46,11 @@ public final class QueryUtils {
                 String date = newsDetails.getString("publishedAt");
                 String image = newsDetails.getString("urlToImage");
 
-                URL imageUrl = null;
-                try {
-                    imageUrl = new URL(image);
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
-                }
+                URL imageUrl = createUrl(image);
+
                 Bitmap bitmapImage = null;
                 try {
-                    bitmapImage = BitmapFactory.decodeStream(imageUrl.openConnection().getInputStream());
+                    bitmapImage = getBitmapImageFromUrl(imageUrl);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -68,6 +63,16 @@ public final class QueryUtils {
         }
 
         return newsArrayList;
+    }
+
+    private static Bitmap getBitmapImageFromUrl(URL url) throws IOException {
+        if (url == null) {
+            return null;
+        }
+        HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+        urlConnection.connect();
+        InputStream inputStream = urlConnection.getInputStream();
+        return BitmapFactory.decodeStream(inputStream);
     }
 
     private static String makeHttpRequest(URL url) throws IOException {

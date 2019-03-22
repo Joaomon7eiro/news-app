@@ -42,7 +42,6 @@ public class NewsArrayAdapter extends ArrayAdapter {
         date.setText(news.getDate());
 
         ImageView newsImage = listViewItem.findViewById(R.id.image);
-
         newsImage.setImageBitmap(news.getImageLink());
 
         return listViewItem;
