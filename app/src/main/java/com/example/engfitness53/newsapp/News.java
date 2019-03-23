@@ -1,15 +1,13 @@
 package com.example.engfitness53.newsapp;
 
-import android.graphics.Bitmap;
-
 public class News {
-    private Bitmap mImageLink;
+    private String mImageLink;
     private String mSource;
     private String mTitle;
     private String mDate;
     private String mUrl;
 
-    public News(Bitmap imageLink, String source, String title, String date, String url) {
+    public News(String imageLink, String source, String title, String date, String url) {
         mImageLink = imageLink;
         mSource = source;
         mTitle = title;
@@ -17,7 +15,7 @@ public class News {
         mUrl = url;
     }
 
-    public Bitmap getImageLink() {
+    public String getImageLink() {
         return mImageLink;
     }
 
