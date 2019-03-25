@@ -3,9 +3,11 @@ package com.example.engfitness53.newsapp;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.app.LoaderManager;
@@ -30,7 +32,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements
+public class NewsActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<List<News>>,
         SearchView.OnQueryTextListener,
         NavigationView.OnNavigationItemSelectedListener {
@@ -128,16 +130,32 @@ public class MainActivity extends AppCompatActivity implements
         return true;
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_settings) {
+            Intent intent = new Intent(this, SettingsActivity.class);
+            startActivity(intent);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     @NonNull
     @Override
     public Loader<List<News>> onCreateLoader(int i, @Nullable Bundle bundle) {
         mEmptyView.setVisibility(View.GONE);
         mNewsListViewHeader.setVisibility(View.GONE);
         mProgressBar.setVisibility(View.VISIBLE);
+
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        String country = sharedPreferences.getString(
+                getString(R.string.country_key),
+                getString(R.string.country_default_value));
+
         Uri url = Uri.parse(BASE_URL).buildUpon()
                 .appendQueryParameter("q", mSearch)
                 .appendQueryParameter("category", mCategory)
-                .appendQueryParameter("country", "br")
+                .appendQueryParameter("country", country)
                 .appendQueryParameter("apiKey", getString(R.string.api_key))
                 .build();
 

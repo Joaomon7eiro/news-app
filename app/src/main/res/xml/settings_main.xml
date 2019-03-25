@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:title="@string/settings">
+
+    <ListPreference
+        android:defaultValue="br"
+        android:entries="@array/countries_labels"
+        android:entryValues="@array/countries_values"
+        android:key="@string/country_key"
+        android:title="País Alvo" />
+
+</PreferenceScreen>

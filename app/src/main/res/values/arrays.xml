@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="countries_labels">
+        <item>Brasil</item>
+        <item>Estados Unidos</item>
+        <item>Canadá</item>
+    </string-array>
+
+    <string-array name="countries_values">
+        <item>br</item>
+        <item>us</item>
+        <item>ca</item>
+    </string-array>
+</resources>
