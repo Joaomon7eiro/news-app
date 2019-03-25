@@ -11,6 +11,7 @@ import android.support.annotation.Nullable;
 import android.app.LoaderManager;
 import android.content.Loader;
 import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -22,6 +23,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +39,9 @@ public class MainActivity extends AppCompatActivity implements
     NewsArrayAdapter mNewsArrayAdapter;
     View mNewsListViewHeader;
     ProgressBar mProgressBar;
+    String mCategory;
     TextView mEmptyView;
+    TextView mListTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,26 +67,42 @@ public class MainActivity extends AppCompatActivity implements
         }
 
         mProgressBar = findViewById(R.id.progress_bar);
+
         mNewsListViewHeader = getLayoutInflater().inflate(R.layout.list_view_header, null);
-        mEmptyView = findViewById(R.id.empty_view);
+        mListTitle = mNewsListViewHeader.findViewById(R.id.list_view_header_title);
+        mCategory = getString(R.string.general);
+
         ListView newsListView = findViewById(R.id.news_list_view);
-        newsListView.setEmptyView(mEmptyView);
-
-        mNewsArrayAdapter = new NewsArrayAdapter(this, mNewsArrayList);
-        newsListView.addHeaderView(mNewsListViewHeader);
-
-        newsListView.setAdapter(mNewsArrayAdapter);
-
         newsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 News news = (News) parent.getAdapter().getItem(position);
-                Uri url = Uri.parse(news.getUrl());
-                Intent intent = new Intent(Intent.ACTION_VIEW, url);
-                startActivity(intent);
+                if(news != null) {
+                    Uri url = Uri.parse(news.getUrl());
+                    Intent intent = new Intent(Intent.ACTION_VIEW, url);
+                    startActivity(intent);
+                }
             }
         });
 
+        mEmptyView = findViewById(R.id.empty_view);
+        newsListView.setEmptyView(mEmptyView);
+
+        mNewsArrayAdapter = new NewsArrayAdapter(this, mNewsArrayList);
+        newsListView.addHeaderView(mNewsListViewHeader, null, false);
+
+        newsListView.setAdapter(mNewsArrayAdapter);
+
+        if (checkInternetConnectivity()) {
+            LoaderManager loaderManager = getLoaderManager();
+            loaderManager.initLoader(LOADER_ID, null, this);
+        } else {
+            mEmptyView.setText(getString(R.string.verify_connection));
+            mEmptyView.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private boolean checkInternetConnectivity() {
         ConnectivityManager connectivityManager = (ConnectivityManager)
                 getSystemService(Context.CONNECTIVITY_SERVICE);
 
@@ -90,16 +110,8 @@ public class MainActivity extends AppCompatActivity implements
         if (connectivityManager != null) {
             networkInfo = connectivityManager.getActiveNetworkInfo();
         }
-        if (networkInfo != null && networkInfo.isConnected()) {
-            LoaderManager loaderManager = getLoaderManager();
-            loaderManager.initLoader(LOADER_ID, null, this);
-        } else {
-            mEmptyView.setText(getString(R.string.verify_connection));
-            mEmptyView.setVisibility(View.VISIBLE);
-        }
-
+        return networkInfo != null && networkInfo.isConnected();
     }
-
 
     @NonNull
     @Override
@@ -108,6 +120,7 @@ public class MainActivity extends AppCompatActivity implements
         mNewsListViewHeader.setVisibility(View.GONE);
         mProgressBar.setVisibility(View.VISIBLE);
         Uri url = Uri.parse(BASE_URL).buildUpon()
+                .appendQueryParameter("category", mCategory)
                 .appendQueryParameter("country", "br")
                 .appendQueryParameter("apiKey", getString(R.string.api_key))
                 .build();
@@ -136,6 +149,47 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-        return false;
+        DrawerLayout drawerLayout = findViewById(R.id.drawer_layout);
+        int menuId = menuItem.getItemId();
+        switch (menuId) {
+            case R.id.business:
+                drawerLayout.closeDrawer(GravityCompat.START);
+                mCategory = getString(R.string.business);
+                break;
+            case R.id.entertainment:
+                drawerLayout.closeDrawer(GravityCompat.START);
+                mCategory = getString(R.string.entertainment);
+                break;
+            case R.id.health:
+                drawerLayout.closeDrawer(GravityCompat.START);
+                mCategory = getString(R.string.health);
+                break;
+            case R.id.science:
+                drawerLayout.closeDrawer(GravityCompat.START);
+                mCategory = getString(R.string.science);
+                break;
+            case R.id.sports:
+                drawerLayout.closeDrawer(GravityCompat.START);
+                mCategory = getString(R.string.sports);
+                break;
+            case R.id.technology:
+                drawerLayout.closeDrawer(GravityCompat.START);
+                mCategory = getString(R.string.technology);
+                break;
+            default:
+                drawerLayout.closeDrawer(GravityCompat.START);
+                mCategory = getString(R.string.general);
+                break;
+        }
+
+        if (checkInternetConnectivity()) {
+            mListTitle.setText(menuItem.getTitle());
+            getLoaderManager().restartLoader(LOADER_ID, null, this);
+        } else {
+            Toast.makeText(this, getString(R.string.verify_connection),
+                    Toast.LENGTH_LONG).show();
+        }
+
+        return true;
     }
 }

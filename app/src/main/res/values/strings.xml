@@ -1,8 +1,18 @@
 <resources>
-    <string name="app_name">NewsApp</string>
+    <string name="app_name">Guia News Brasil</string>
     <string name="no_results">Sem Resultados</string>
     <string name="verify_connection">Verifique sua conexão e tente novamente</string>
     <string name="appbar_scrolling_view_behavior">android.support.design.widget.AppBarLayout$ScrollingViewBehavior</string>
     <string name="navigation_drawer_open">Abrir navigation drawer</string>
     <string name="navigation_drawer_close">Fechar navigation drawer</string>
+    <string name="main_news">Principais notícias</string>
+    <string name="business">Negócios</string>
+    <string name="entertainment">Entreterimento</string>
+    <string name="health">Saúde</string>
+    <string name="science">Ciência</string>
+    <string name="sports">Esportes</string>
+    <string name="technology">Tecnologia</string>
+    <string name="general">general</string>
+    <string name="navigation_header_image">navigation header image</string>
+    <string name="news_image">news image</string>
 </resources>

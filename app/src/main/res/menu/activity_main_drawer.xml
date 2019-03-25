@@ -3,25 +3,25 @@
     <group>
         <item
             android:id="@+id/general"
-            android:title="Geral" />
+            android:title="@string/main_news" />
         <item
             android:id="@+id/business"
-            android:title="Negócios" />
+            android:title="@string/business" />
         <item
             android:id="@+id/entertainment"
-            android:title="Entreterimento" />
+            android:title="@string/entertainment" />
         <item
             android:id="@+id/health"
-            android:title="Saúde" />
+            android:title="@string/health" />
         <item
             android:id="@+id/science"
-            android:title="Ciência" />
+            android:title="@string/science" />
         <item
             android:id="@+id/sports"
-            android:title="Esportes" />
+            android:title="@string/sports" />
         <item
             android:id="@+id/technology"
-            android:title="Tecnologia" />
+            android:title="@string/technology" />
     </group>
 </menu>
 

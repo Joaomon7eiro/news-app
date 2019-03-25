@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/list_view_header_title"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:id="@+id/list_view_header"
     android:paddingTop="8dp"
-    android:visibility="gone"
     android:paddingBottom="16dp"
-    android:textSize="24sp"
+    android:text="@string/main_news"
     android:textColor="@android:color/black"
+    android:textSize="24sp"
     android:textStyle="bold"
-    android:text="Principais notícias" />
+    android:visibility="gone" />

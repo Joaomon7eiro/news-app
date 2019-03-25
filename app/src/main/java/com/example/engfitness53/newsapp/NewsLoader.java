@@ -9,7 +9,7 @@ import java.util.List;
 
 public class NewsLoader extends AsyncTaskLoader<List<News>> {
 
-    String mUrl;
+    private String mUrl;
 
     public NewsLoader(@NonNull Context context, String url) {
         super(context);
