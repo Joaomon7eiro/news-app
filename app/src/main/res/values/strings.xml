@@ -12,7 +12,7 @@
     <string name="science">Ciência</string>
     <string name="sports">Esportes</string>
     <string name="technology">Tecnologia</string>
-    <string name="general">general</string>
     <string name="navigation_header_image">navigation header image</string>
     <string name="news_image">news image</string>
+    <string name="search">Search</string>
 </resources>

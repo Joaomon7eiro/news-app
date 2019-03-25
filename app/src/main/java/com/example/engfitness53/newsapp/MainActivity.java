@@ -16,7 +16,9 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -30,6 +32,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<List<News>>,
+        SearchView.OnQueryTextListener,
         NavigationView.OnNavigationItemSelectedListener {
     private static final int LOADER_ID = 1;
     private static final String BASE_URL =
@@ -40,6 +43,7 @@ public class MainActivity extends AppCompatActivity implements
     View mNewsListViewHeader;
     ProgressBar mProgressBar;
     String mCategory;
+    String mSearch = "";
     TextView mEmptyView;
     TextView mListTitle;
 
@@ -70,14 +74,14 @@ public class MainActivity extends AppCompatActivity implements
 
         mNewsListViewHeader = getLayoutInflater().inflate(R.layout.list_view_header, null);
         mListTitle = mNewsListViewHeader.findViewById(R.id.list_view_header_title);
-        mCategory = getString(R.string.general);
+        mCategory = "general";
 
         ListView newsListView = findViewById(R.id.news_list_view);
         newsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 News news = (News) parent.getAdapter().getItem(position);
-                if(news != null) {
+                if (news != null) {
                     Uri url = Uri.parse(news.getUrl());
                     Intent intent = new Intent(Intent.ACTION_VIEW, url);
                     startActivity(intent);
@@ -113,6 +117,17 @@ public class MainActivity extends AppCompatActivity implements
         return networkInfo != null && networkInfo.isConnected();
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.toolbar_menu, menu);
+
+        MenuItem seachBarMenuItem = menu.findItem(R.id.action_search);
+
+        SearchView searchView = (SearchView) seachBarMenuItem.getActionView();
+        searchView.setOnQueryTextListener(this);
+        return true;
+    }
+
     @NonNull
     @Override
     public Loader<List<News>> onCreateLoader(int i, @Nullable Bundle bundle) {
@@ -120,6 +135,7 @@ public class MainActivity extends AppCompatActivity implements
         mNewsListViewHeader.setVisibility(View.GONE);
         mProgressBar.setVisibility(View.VISIBLE);
         Uri url = Uri.parse(BASE_URL).buildUpon()
+                .appendQueryParameter("q", mSearch)
                 .appendQueryParameter("category", mCategory)
                 .appendQueryParameter("country", "br")
                 .appendQueryParameter("apiKey", getString(R.string.api_key))
@@ -154,35 +170,36 @@ public class MainActivity extends AppCompatActivity implements
         switch (menuId) {
             case R.id.business:
                 drawerLayout.closeDrawer(GravityCompat.START);
-                mCategory = getString(R.string.business);
+                mCategory = "business";
                 break;
             case R.id.entertainment:
                 drawerLayout.closeDrawer(GravityCompat.START);
-                mCategory = getString(R.string.entertainment);
+                mCategory = "entertainment";
                 break;
             case R.id.health:
                 drawerLayout.closeDrawer(GravityCompat.START);
-                mCategory = getString(R.string.health);
+                mCategory = "health";
                 break;
             case R.id.science:
                 drawerLayout.closeDrawer(GravityCompat.START);
-                mCategory = getString(R.string.science);
+                mCategory = "science";
                 break;
             case R.id.sports:
                 drawerLayout.closeDrawer(GravityCompat.START);
-                mCategory = getString(R.string.sports);
+                mCategory = "sports";
                 break;
             case R.id.technology:
                 drawerLayout.closeDrawer(GravityCompat.START);
-                mCategory = getString(R.string.technology);
+                mCategory = "technology";
                 break;
             default:
                 drawerLayout.closeDrawer(GravityCompat.START);
-                mCategory = getString(R.string.general);
+                mCategory = "general";
                 break;
         }
 
         if (checkInternetConnectivity()) {
+            mSearch = "";
             mListTitle.setText(menuItem.getTitle());
             getLoaderManager().restartLoader(LOADER_ID, null, this);
         } else {
@@ -191,5 +208,22 @@ public class MainActivity extends AppCompatActivity implements
         }
 
         return true;
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        if (checkInternetConnectivity()) {
+            mSearch = query;
+            getLoaderManager().restartLoader(LOADER_ID, null, this);
+        } else {
+            Toast.makeText(this, getString(R.string.verify_connection),
+                    Toast.LENGTH_LONG).show();
+        }
+        return true;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        return false;
     }
 }
